@@ -306,20 +306,22 @@
     background: #0f1e45;
     display: grid;
     grid-template-columns: 1fr 110px 110px;
-    padding: 13px 18px;
+    padding: 13px 10px;
+    gap: 4px;
   }
-  .th { color: white; font-size: 13px; font-weight: 700; text-align: center; }
+  .th { color: white; font-size: 12px; font-weight: 700; text-align: center; min-width: 0; overflow-wrap: break-word; }
   .th:first-child { text-align: left; }
   .t-row {
     display: grid;
     grid-template-columns: 1fr 110px 110px;
-    padding: 11px 18px;
+    padding: 11px 10px;
+    gap: 4px;
     border-bottom: 1px solid #f3f4f6;
     transition: background 0.15s;
   }
   .t-row:last-child { border-bottom: none; }
   .t-row:hover { background: #f9fafb; }
-  .td { font-size: 14px; color: #374151; text-align: center; }
+  .td { font-size: 13px; color: #374151; text-align: center; min-width: 0; overflow-wrap: break-word; }
   .td:first-child { text-align: left; font-weight: 500; color: #111827; }
   .td-ap { color: #1e40af; font-weight: 700; }
   .td-zero { color: #d1d5db; font-weight: 500; }
@@ -327,27 +329,29 @@
   .t-total {
     display: grid;
     grid-template-columns: 1fr 110px 110px;
-    padding: 12px 18px;
+    padding: 12px 10px;
+    gap: 4px;
     background: #f0f4f8;
     border-top: 2px solid #e5e7eb;
   }
-  .t-total .td { font-weight: 700; font-size: 14px; }
+  .t-total .td { font-weight: 700; font-size: 13px; }
   .t-media {
     display: grid;
     grid-template-columns: 1fr 110px 110px;
-    padding: 11px 18px;
+    padding: 11px 10px;
+    gap: 4px;
     background: #4ade80;
   }
-  .t-media .td { font-weight: 700; font-size: 14px; color: #0f1e45; }
+  .t-media .td { font-weight: 700; font-size: 13px; color: #0f1e45; }
   .empty { padding: 48px; text-align: center; color: #9ca3af; font-size: 14px; }
 
 
   /* FÉRIAS */
   .td-ferias { color: #f59e0b; font-weight: 700; font-style: italic; }
   .btn-ferias {
-    padding: 4px 10px;
+    padding: 3px 6px;
     border-radius: 20px;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 700;
     border: none;
     cursor: pointer;
@@ -360,19 +364,21 @@
   .btn-ferias.on  { background: #d97706; color: white; }
   .btn-ferias.on:hover  { background: #b45309; }
   .badge-ferias  { background: #fef3c7; color: #d97706; }
-  .t-head-ferias  { grid-template-columns: 1fr 80px 80px 70px 55px !important; }
-  .t-row-ferias   { grid-template-columns: 1fr 80px 80px 70px 55px !important; }
-  .t-total-ferias { grid-template-columns: 1fr 80px 80px 70px 55px !important; }
-  .t-media-ferias { grid-template-columns: 1fr 80px 80px 70px 55px !important; }
+  .t-head-ferias  { grid-template-columns: 1fr 40px 40px 40px 54px 30px !important; }
+  .t-row-ferias   { grid-template-columns: 1fr 40px 40px 40px 54px 30px !important; }
+  .t-total-ferias { grid-template-columns: 1fr 40px 40px 40px 54px 30px !important; }
+  .t-media-ferias { grid-template-columns: 1fr 40px 40px 40px 54px 30px !important; }
+  .td-dn { color: #7c3aed; font-weight: 700; }
   .btn-editar {
-    width: 30px;
-    height: 26px;
-    border-radius: 8px;
+    width: 28px;
+    height: 24px;
+    padding: 0;
+    border-radius: 6px;
     border: 1px solid #d1d5db;
     background: #f3f4f6;
     color: #374151;
     cursor: pointer;
-    font-size: 13px;
+    font-size: 12px;
     transition: background 0.2s;
   }
   .btn-editar:hover { background: #e5e7eb; }
@@ -512,9 +518,14 @@
         <input type="number" class="field-input" id="inp-ap" min="0" placeholder="0">
       </div>
 
-      <div class="field-group" style="margin-bottom:22px">
+      <div class="field-group">
         <label class="field-label">Quantidade de Pagas</label>
         <input type="number" class="field-input" id="inp-pg" min="0" placeholder="0">
+      </div>
+
+      <div class="field-group" style="margin-bottom:22px">
+        <label class="field-label">DN Ativo</label>
+        <input type="number" class="field-input" id="inp-dn" min="0" placeholder="0">
       </div>
 
       <button class="btn-wpp" onclick="submitAndShare()">
@@ -568,8 +579,9 @@
     <div class="table-card">
       <div class="t-head t-head-ferias">
         <div class="th">GCM</div>
-        <div class="th">Aprovadas</div>
+        <div class="th">Apr.</div>
         <div class="th">Pagas</div>
+        <div class="th">DN</div>
         <div class="th">Férias</div>
         <div class="th"></div>
       </div>
@@ -617,7 +629,7 @@
   </div>
   <table class="pa-table">
     <thead>
-      <tr><th>GCM</th><th>Aprovadas</th><th>Pagas</th></tr>
+      <tr><th>GCM</th><th>Aprovadas</th><th>Pagas</th><th>DN Ativo</th></tr>
     </thead>
     <tbody id="print-tbody"></tbody>
   </table>
@@ -747,6 +759,7 @@ function submitAndShare() {
   const gcm = document.getElementById('sel-gcm').value;
   const ap  = parseInt(document.getElementById('inp-ap').value) || 0;
   const pg  = parseInt(document.getElementById('inp-pg').value) || 0;
+  const dn  = parseInt(document.getElementById('inp-dn').value) || 0;
 
   if (!gcm) { alert('Por favor, selecione o GCM.'); return; }
 
@@ -755,17 +768,19 @@ function submitAndShare() {
   const existing = getRowByName(data, gcm);
 
   if (existing) {
-    alert(`⚠️ ${gcm}, sua prévia já foi registrada anteriormente!\n\nAprovadas: ${existing.ap} | Pagas: ${existing.pg}\n\nSeu envio anterior foi mantido.`);
+    alert(`⚠️ ${gcm}, sua prévia já foi registrada anteriormente!\n\nAprovadas: ${existing.ap} | Pagas: ${existing.pg} | DN Ativo: ${existing.dn ?? 0}\n\nSeu envio anterior foi mantido.`);
     document.getElementById('sel-gcm').value = '';
     document.getElementById('inp-ap').value = '';
     document.getElementById('inp-pg').value = '';
+    document.getElementById('inp-dn').value = '';
     return;
   }
 
   // Open WhatsApp IMMEDIATELY (before async) to avoid popup blocker
   const apStr = String(ap).padStart(2, '0');
   const pgStr = String(pg).padStart(2, '0');
-  const msg = 'AP: *' + apStr + '*%0APG: *' + pgStr + '*';
+  const dnStr = String(dn).padStart(2, '0');
+  const msg = 'AP: *' + apStr + '*%0APG: *' + pgStr + '*%0ADN Ativo: *' + dnStr + '*';
   window.open('https://api.whatsapp.com/send?text=' + msg, '_blank');
 
   // Save to Firebase (first time only)
@@ -773,9 +788,10 @@ function submitAndShare() {
   set(ref(db, 'registros/' + gcmKey), {
     nome: gcm,
     ap: Number(ap),
-    pg: Number(pg)
+    pg: Number(pg),
+    dn: Number(dn)
   }).then(() => {
-    console.log('Firebase: salvo com sucesso -', gcm, ap, pg);
+    console.log('Firebase: salvo com sucesso -', gcm, ap, pg, dn);
   }).catch((err) => {
     console.error('Firebase: erro ao salvar -', err);
     alert('Erro ao salvar no banco. Tente novamente.');
@@ -788,20 +804,23 @@ function submitAndShare() {
   document.getElementById('sel-gcm').value = '';
   document.getElementById('inp-ap').value = '';
   document.getElementById('inp-pg').value = '';
+  document.getElementById('inp-dn').value = '';
 }
 window.submitAndShare = submitAndShare;
 
 function calcTotals(data) {
-  let totalAp = 0, totalPg = 0, count = 0;
+  let totalAp = 0, totalPg = 0, totalDn = 0, count = 0;
   Object.values(data).forEach(row => {
     if (row.ferias) return;
     totalAp += row.ap || 0;
     totalPg += row.pg || 0;
+    totalDn += row.dn || 0;
     count++;
   });
   const mediaAp = count ? (totalAp / count).toFixed(1) : '0.0';
   const mediaPg = count ? (totalPg / count).toFixed(1) : '0.0';
-  return { totalAp, totalPg, mediaAp, mediaPg, count };
+  const mediaDn = count ? (totalDn / count).toFixed(1) : '0.0';
+  return { totalAp, totalPg, totalDn, mediaAp, mediaPg, mediaDn, count };
 }
 
 function getRowByName(data, name) {
@@ -814,14 +833,16 @@ function renderAdmin(data) {
   tbody.innerHTML = '';
 
   GCM_LIST.forEach(gcm => {
-    const row = getRowByName(data, gcm) || { ap: 0, pg: 0 };
+    const row = getRowByName(data, gcm) || { ap: 0, pg: 0, dn: 0 };
     const isFerias = row.ferias === true;
     const d = document.createElement('div');
     d.className = 't-row t-row-ferias';
     const apDisplay = isFerias ? 'Férias' : row.ap;
     const pgDisplay = isFerias ? 'Férias' : row.pg;
+    const dnDisplay = isFerias ? 'Férias' : (row.dn ?? 0);
     const apStyle   = isFerias ? 'td-ferias' : (row.ap > 0 ? 'td-ap' : 'td-zero');
     const pgStyle   = isFerias ? 'td-ferias' : (row.pg > 0 ? 'td-pg' : 'td-zero');
+    const dnStyle   = isFerias ? 'td-ferias' : ((row.dn ?? 0) > 0 ? 'td-dn' : 'td-zero');
     const gcmKey    = gcmKeyOf(gcm);
     const feriasClass = isFerias ? 'on' : 'off';
     const feriasTxt   = isFerias ? 'Ativo' : 'Férias';
@@ -829,6 +850,7 @@ function renderAdmin(data) {
       <div class="td">${gcm}</div>
       <div class="td ${apStyle}">${apDisplay}</div>
       <div class="td ${pgStyle}">${pgDisplay}</div>
+      <div class="td ${dnStyle}">${dnDisplay}</div>
       <div class="td">
         <button class="btn-ferias ${feriasClass}" onclick="toggleFerias('${gcmKey}','${gcm}')">${feriasTxt}</button>
       </div>
@@ -838,12 +860,13 @@ function renderAdmin(data) {
     tbody.appendChild(d);
   });
 
-  const { totalAp, totalPg, mediaAp, mediaPg } = calcTotals(data);
+  const { totalAp, totalPg, totalDn, mediaAp, mediaPg, mediaDn } = calcTotals(data);
   tfooter.innerHTML = `
     <div class="t-total t-total-ferias">
       <div class="td">Total</div>
       <div class="td td-ap">${totalAp}</div>
       <div class="td td-pg">${totalPg}</div>
+      <div class="td td-dn">${totalDn}</div>
       <div class="td"></div>
       <div class="td"></div>
     </div>
@@ -851,6 +874,7 @@ function renderAdmin(data) {
       <div class="td">Média</div>
       <div class="td">${mediaAp}</div>
       <div class="td">${mediaPg}</div>
+      <div class="td">${mediaDn}</div>
       <div class="td"></div>
       <div class="td"></div>
     </div>`;
@@ -878,7 +902,7 @@ function renderDashboard(data) {
     item.innerHTML = `
       <div>
         <div class="dash-item-name">${gcm}</div>
-        <div class="dash-item-info">${isFerias ? 'De férias' : hasSent ? `AP: ${row.ap} | PG: ${row.pg}` : 'Ainda não enviou'}</div>
+        <div class="dash-item-info">${isFerias ? 'De férias' : hasSent ? `AP: ${row.ap} | PG: ${row.pg} | DN: ${row.dn ?? 0}` : 'Ainda não enviou'}</div>
       </div>
       <div class="dash-item-right">
         <span class="dash-badge ${isFerias ? 'badge-ferias' : hasSent ? 'badge-sent' : 'badge-pending'}">${isFerias ? 'Férias' : hasSent ? '✅ Enviou' : '⏳ Pendente'}</span>
@@ -901,7 +925,7 @@ function buildPrintTable() {
   const printTbody = document.getElementById('print-tbody');
   printTbody.innerHTML = '';
 
-  const { totalAp, totalPg, mediaAp, mediaPg } = calcTotals(data);
+  const { totalAp, totalPg, totalDn, mediaAp, mediaPg, mediaDn } = calcTotals(data);
 
   GCM_LIST.forEach(gcm => {
     const row = getRowByName(data, gcm);
@@ -909,23 +933,23 @@ function buildPrintTable() {
     const tr = document.createElement('tr');
     if (isRowFerias) {
       tr.className = 'row-ferias';
-      tr.innerHTML = `<td>${gcm}</td><td colspan="2" style="text-align:center;color:#d97706;font-weight:700;font-style:italic;">Férias</td>`;
+      tr.innerHTML = `<td>${gcm}</td><td colspan="3" style="text-align:center;color:#d97706;font-weight:700;font-style:italic;">Férias</td>`;
     } else if (row) {
-      tr.innerHTML = `<td>${gcm}</td><td>${row.ap}</td><td>${row.pg}</td>`;
+      tr.innerHTML = `<td>${gcm}</td><td>${row.ap}</td><td>${row.pg}</td><td>${row.dn ?? 0}</td>`;
     } else {
-      tr.innerHTML = `<td>${gcm}</td><td>0</td><td>0</td>`;
+      tr.innerHTML = `<td>${gcm}</td><td>0</td><td>0</td><td>0</td>`;
     }
     printTbody.appendChild(tr);
   });
 
   const trTotal = document.createElement('tr');
   trTotal.className = 'row-total';
-  trTotal.innerHTML = `<td>Total</td><td>${totalAp}</td><td>${totalPg}</td>`;
+  trTotal.innerHTML = `<td>Total</td><td>${totalAp}</td><td>${totalPg}</td><td>${totalDn}</td>`;
   printTbody.appendChild(trTotal);
 
   const trMedia = document.createElement('tr');
   trMedia.className = 'row-media';
-  trMedia.innerHTML = `<td>Média</td><td>${mediaAp}</td><td>${mediaPg}</td>`;
+  trMedia.innerHTML = `<td>Média</td><td>${mediaAp}</td><td>${mediaPg}</td><td>${mediaDn}</td>`;
   printTbody.appendChild(trMedia);
 
   document.getElementById('print-date').textContent = 'Gerado em: ' + new Date().toLocaleString('pt-BR');
@@ -969,21 +993,21 @@ window.gerarImagem = gerarImagem;
 
 function compartilharWppAdmin() {
   const data = window._dbData || {};
-  const { totalAp, totalPg, mediaAp, mediaPg } = calcTotals(data);
+  const { totalAp, totalPg, totalDn, mediaAp, mediaPg, mediaDn } = calcTotals(data);
 
   let linhas = '';
   GCM_LIST.forEach(gcm => {
     const row = getRowByName(data, gcm);
     if (!row) return;
-    linhas += `• ${gcm}: ${row.ap} AP / ${row.pg} PG
+    linhas += `• ${gcm}: ${row.ap} AP / ${row.pg} PG / ${row.dn ?? 0} DN
 `;
   });
 
   const msg = `🏦 *Filial Paraná*
 
 ${linhas}
-📊 *Total:* ${totalAp} AP / ${totalPg} PG
-📈 *Média:* ${mediaAp} AP / ${mediaPg} PG
+📊 *Total:* ${totalAp} AP / ${totalPg} PG / ${totalDn} DN
+📈 *Média:* ${mediaAp} AP / ${mediaPg} PG / ${mediaDn} DN
 
 📅 ${new Date().toLocaleString('pt-BR')}`;
   window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
@@ -998,7 +1022,7 @@ async function limparDados() {
 
 async function toggleFerias(gcmKey, gcmNome) {
   const data = window._dbData || {};
-  const existing = getRowByName(data, gcmNome) || { ap: 0, pg: 0 };
+  const existing = getRowByName(data, gcmNome) || { ap: 0, pg: 0, dn: 0 };
   const isFerias = existing.ferias === true;
   if (!isFerias) {
     if (!confirm(`Confirma que ${gcmNome} está de férias?\nOs valores serão ocultados do total.`)) return;
@@ -1007,6 +1031,7 @@ async function toggleFerias(gcmKey, gcmNome) {
     nome: gcmNome,
     ap: existing.ap || 0,
     pg: existing.pg || 0,
+    dn: existing.dn || 0,
     ferias: !isFerias
   });
 }
@@ -1014,16 +1039,19 @@ window.toggleFerias = toggleFerias;
 
 async function editarRegistro(gcmKey, gcmNome) {
   const data = window._dbData || {};
-  const existing = getRowByName(data, gcmNome) || { ap: 0, pg: 0, ferias: false };
+  const existing = getRowByName(data, gcmNome) || { ap: 0, pg: 0, dn: 0, ferias: false };
 
   const apStr = prompt(`Editar Aprovadas — ${gcmNome}`, existing.ap ?? 0);
   if (apStr === null) return;
   const pgStr = prompt(`Editar Pagas — ${gcmNome}`, existing.pg ?? 0);
   if (pgStr === null) return;
+  const dnStr = prompt(`Editar DN Ativo — ${gcmNome}`, existing.dn ?? 0);
+  if (dnStr === null) return;
 
   const ap = parseInt(apStr);
   const pg = parseInt(pgStr);
-  if (isNaN(ap) || isNaN(pg) || ap < 0 || pg < 0) {
+  const dn = parseInt(dnStr);
+  if (isNaN(ap) || isNaN(pg) || isNaN(dn) || ap < 0 || pg < 0 || dn < 0) {
     alert('Valores inválidos. Use apenas números iguais ou maiores que zero.');
     return;
   }
@@ -1032,6 +1060,7 @@ async function editarRegistro(gcmKey, gcmNome) {
     nome: gcmNome,
     ap: ap,
     pg: pg,
+    dn: dn,
     ferias: existing.ferias === true
   });
 }
