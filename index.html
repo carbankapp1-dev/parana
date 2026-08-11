@@ -654,6 +654,19 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const dbRef = ref(db, 'registros');
 
+// ===== Firebase Regional (consolidado) =====
+const firebaseConfigRegional = {
+  apiKey: "AIzaSyCFoXH5uMSKvtcjx7jw3t0v8RxMw44Zi-Y",
+  authDomain: "regional-consolidado.firebaseapp.com",
+  databaseURL: "https://regional-consolidado-default-rtdb.firebaseio.com",
+  projectId: "regional-consolidado",
+  storageBucket: "regional-consolidado.firebasestorage.app",
+  messagingSenderId: "82015181451",
+  appId: "1:82015181451:web:0472525fb6e4336cc5928e"
+};
+const appRegional = initializeApp(firebaseConfigRegional, "regional");
+const dbRegional = getDatabase(appRegional);
+
 const GCM_LIST_PADRAO = ['Alessandra G C Falcheti','Alessandro dos Santos Pegoli','Cristiane de Oliveira','Denis Cardoso Sugayama','Edson Pavanelo','Gabriela Mara Batista Carvalho','Gilson Marques da Silva','Guilherme Agulhari Goncalves','Isaac Duarte','Jessica Matos','João Elias Faria da Costa','Marcos Fernando Zanata Junior','Marcus Roger da Silva','Marcus Vinicius Pereira Martinez','Mauricio Ribeiro Alexandre','Reynaldo Rubens Rosa Neto','Romildo Aparecido da Silva','Sanderson Fernandes','Thiago Guimaraes','Vanderson de Lima Caetano'];
 let GCM_LIST = [...GCM_LIST_PADRAO];
 const gcmListRef = ref(db, 'listaGCM');
@@ -955,6 +968,26 @@ function buildPrintTable() {
   document.getElementById('print-date').textContent = 'Gerado em: ' + new Date().toLocaleString('pt-BR');
 }
 
+// Envia uma cópia do fechamento atual para o banco Regional (consolidado)
+// antes dos registros locais serem zerados.
+async function enviarParaRegional() {
+  try {
+    const data = window._dbData || {};
+    const { totalAp, totalPg, totalDn, mediaAp, mediaPg, mediaDn, count } = calcTotals(data);
+    const snapshot = {
+      coordenador: 'Marcela A de O Silva',
+      timestamp: Date.now(),
+      dataHora: new Date().toLocaleString('pt-BR'),
+      registros: data,
+      totals: { totalAp, totalPg, totalDn, mediaAp, mediaPg, mediaDn, count }
+    };
+    await set(ref(dbRegional, 'fechamentos/parana/ultimo'), snapshot);
+    await set(ref(dbRegional, 'fechamentos/parana/historico/' + Date.now()), snapshot);
+  } catch (err) {
+    console.error('Erro ao enviar dados para o Regional:', err);
+  }
+}
+
 async function gerarImagem() {
   buildPrintTable();
   const el = document.getElementById('print-area');
@@ -984,6 +1017,9 @@ async function gerarImagem() {
       }
     }
   }, 'image/png');
+
+  // Envia uma cópia do fechamento para o painel Regional antes de zerar
+  await enviarParaRegional();
 
   // Zera os registros automaticamente após gerar a imagem
   await remove(dbRef);
