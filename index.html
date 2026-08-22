@@ -824,11 +824,11 @@ window.submitAndShare = submitAndShare;
 function calcTotals(data) {
   let totalAp = 0, totalPg = 0, totalDn = 0, count = 0;
   Object.values(data).forEach(row => {
+    count++;
     if (row.ferias) return;
     totalAp += row.ap || 0;
     totalPg += row.pg || 0;
     totalDn += row.dn || 0;
-    count++;
   });
   const mediaAp = count ? (totalAp / count).toFixed(1) : '0.0';
   const mediaPg = count ? (totalPg / count).toFixed(1) : '0.0';
